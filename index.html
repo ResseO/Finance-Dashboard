@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Finance Flow</title>
+    
+    <!-- iOS Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Finances">
+    
+    <!-- Tailwind CSS for UI Layouts -->
+    <script src="https://tailwindcss.com"></script>
+    <style>
+        /* Smooth scrolling and iOS safe area padding for modern iPhones */
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header Section -->
+    <header class="px-6 pt-6 pb-4 border-b border-gray-900 bg-gray-950/80 backdrop-blur sticky top-0 z-50">
+        <h1 class="text-xl font-bold tracking-tight text-emerald-400">⚡ Core Dashboard</h1>
+        <p class="text-xs text-gray-400">Live Status Tracker</p>
+    </header>
+
+    <!-- Main Dashboard Content -->
+    <main class="flex-1 px-4 py-6 space-y-4 overflow-y-auto">
+        
+        <!-- Cash Status Summary Card -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl">
+            <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Total Available Cash</h2>
+            <div class="text-3xl font-extrabold tracking-tight text-white" id="totalCashDisplay">$0.00</div>
+            <div class="mt-3 grid grid-cols-2 gap-2 border-t border-gray-800/60 pt-3 text-xs">
+                <div>
+                    <span class="block text-gray-500">Emergency Fund</span>
+                    <span class="font-medium text-gray-300" id="efundDisplay">$0.00</span>
+                </div>
+                <div>
+                    <span class="block text-gray-500">Investable Surplus</span>
+                    <span class="font-medium text-emerald-400" id="surplusDisplay">$0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategy Distribution Progress Bars -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl space-y-4">
+            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Asset Allocation</h3>
+            
+            <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-300 font-medium">Core Allocation (60%)</span>
+                    <span class="text-gray-400" id="coreAmountDisplay">$0.00</span>
+                </div>
+                <div class="w-full bg-gray-800 rounded-full h-2">
+                    <div class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 60%"></div>
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-300 font-medium">Income Target (40%)</span>
+                    <span class="text-gray-400" id="incomeAmountDisplay">$0.00</span>
+                </div>
+                <div class="w-full bg-gray-800 rounded-full h-2">
+                    <div class="bg-indigo-500 h-2 rounded-full transition-all duration-500" style="width: 40%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inline Data Control Panel -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl">
+            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Update Figures</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-2xs text-gray-500 font-medium mb-1">Enter Liquid Capital</label>
+                    <input type="number" id="cashInput" placeholder="11000" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 text-sm font-medium">
+                </div>
+                <button onclick="updateDashboardValues()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold py-3 px-4 rounded-xl text-sm transition duration-150 active:scale-98">
+                    Recalculate Metrics
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar (Visual Placeholder) -->
+    <footer class="bg-gray-950 border-t border-gray-900 px-6 py-4 flex justify-around text-gray-500 text-xs">
+        <span class="text-emerald-400 font-semibold">Dashboard</span>
+        <span>Allocations</span>
+        <span>Projections</span>
+    </footer>
+
+    <!-- Interactive Data Management Script -->
+    <script>
+        // Load values securely from local storage or set initial baselines
+        let totalCash = parseFloat(localStorage.getItem('dashboardTotalCash')) || 11000;
+
+        function refreshUI() {
+            // Business logic for allocations
+            const emergencyFund = 5000;
+            const investableSurplus = Math.max(0, totalCash - emergencyFund);
+            const coreAllocation = investableSurplus * 0.60;
+            const incomeAllocation = investableSurplus * 0.40;
+
+            // Render calculations into HTML document elements
+            document.getElementById('totalCashDisplay').innerText = formatCurrency(totalCash);
+            document.getElementById('efundDisplay').innerText = formatCurrency(emergencyFund);
+            document.getElementById('surplusDisplay').innerText = formatCurrency(investableSurplus);
+            document.getElementById('coreAmountDisplay').innerText = formatCurrency(coreAllocation);
+            document.getElementById('incomeAmountDisplay').innerText = formatCurrency(incomeAllocation);
+            document.getElementById('cashInput').value = totalCash;
+        }
+
+        function updateDashboardValues() {
+            const inputVal = parseFloat(document.getElementById('cashInput').value);
+            if (!isNaN(inputVal) && inputVal >= 0) {
+                totalCash = inputVal;
+                localStorage.setItem('dashboardTotalCash', totalCash);
+                refreshUI();
+            }
+        }
+
+        function formatCurrency(num) {
+            return '$' + num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Initialize display properties immediately on window load
+        window.onload = refreshUI;
+    </script>
+</body>
+</html>
