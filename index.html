@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Finance Flow</title>
+    <title>Finance Master</title>
     
-    <!-- iOS Web App Meta Tags -->
+    <!-- iOS Web App Metadata -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Finances">
     
-    <!-- Tailwind CSS for UI Layouts -->
     <script src="https://tailwindcss.com"></script>
     <style>
-        /* Smooth scrolling and iOS safe area padding for modern iPhones */
         body {
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
@@ -23,114 +21,167 @@
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Header Section -->
+    <!-- Sticky App Header -->
     <header class="px-6 pt-6 pb-4 border-b border-gray-900 bg-gray-950/80 backdrop-blur sticky top-0 z-50">
-        <h1 class="text-xl font-bold tracking-tight text-emerald-400">⚡ Core Dashboard</h1>
-        <p class="text-xs text-gray-400">Live Status Tracker</p>
+        <h1 class="text-xl font-bold tracking-tight text-emerald-400">⚡ Master Financial Planner</h1>
+        <p class="text-xs text-gray-400">Bills, Income & Asset Tracking</p>
     </header>
 
-    <!-- Main Dashboard Content -->
-    <main class="flex-1 px-4 py-6 space-y-4 overflow-y-auto">
+    <!-- Main Dynamic Interface -->
+    <main class="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
         
-        <!-- Cash Status Summary Card -->
-        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl">
-            <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Total Available Cash</h2>
-            <div class="text-3xl font-extrabold tracking-tight text-white" id="totalCashDisplay">$0.00</div>
-            <div class="mt-3 grid grid-cols-2 gap-2 border-t border-gray-800/60 pt-3 text-xs">
+        <!-- Summary Totals Section -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl grid grid-cols-2 gap-4">
+            <div>
+                <span class="block text-2xs font-semibold text-gray-500 uppercase tracking-wider">Total Net Paycheck</span>
+                <span class="text-2xl font-extrabold text-white" id="summaryPaycheck">\$0.00</span>
+            </div>
+            <div>
+                <span class="block text-2xs font-semibold text-gray-500 uppercase tracking-wider">Total Fixed Expenses</span>
+                <span class="text-2xl font-extrabold text-rose-400" id="summaryBills">\$0.00</span>
+            </div>
+        </div>
+
+        <!-- Section A: Income Configuration -->
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl space-y-3">
+            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">💰 Regular Income Sources</h3>
+            <div class="grid grid-cols-2 gap-2">
                 <div>
-                    <span class="block text-gray-500">Emergency Fund</span>
-                    <span class="font-medium text-gray-300" id="efundDisplay">$0.00</span>
+                    <label class="block text-2xs text-gray-500 mb-1">Paycheck Amount</label>
+                    <input type="number" id="paycheckInput" oninput="saveData()" placeholder="e.g. 2500" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 text-sm">
                 </div>
                 <div>
-                    <span class="block text-gray-500">Investable Surplus</span>
-                    <span class="font-medium text-emerald-400" id="surplusDisplay">$0.00</span>
+                    <label class="block text-2xs text-gray-500 mb-1">Frequency</label>
+                    <select id="paycheckFreq" onchange="saveData()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 text-sm h-[38px]">
+                        <option value="biweekly">Biweekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
                 </div>
             </div>
         </div>
 
-        <!-- Strategy Distribution Progress Bars -->
+        <!-- Section B: Dynamic Bills & Credit Cards Tracker -->
         <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl space-y-4">
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Asset Allocation</h3>
-            
-            <div class="space-y-1.5">
-                <div class="flex justify-between text-xs">
-                    <span class="text-gray-300 font-medium">Core Allocation (60%)</span>
-                    <span class="text-gray-400" id="coreAmountDisplay">$0.00</span>
-                </div>
-                <div class="w-full bg-gray-800 rounded-full h-2">
-                    <div class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 60%"></div>
-                </div>
-            </div>
-
-            <div class="space-y-1.5">
-                <div class="flex justify-between text-xs">
-                    <span class="text-gray-300 font-medium">Income Target (40%)</span>
-                    <span class="text-gray-400" id="incomeAmountDisplay">$0.00</span>
-                </div>
-                <div class="w-full bg-gray-800 rounded-full h-2">
-                    <div class="bg-indigo-500 h-2 rounded-full transition-all duration-500" style="width: 40%"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Inline Data Control Panel -->
-        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-xl">
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Update Figures</h3>
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-2xs text-gray-500 font-medium mb-1">Enter Liquid Capital</label>
-                    <input type="number" id="cashInput" placeholder="11000" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 text-sm font-medium">
-                </div>
-                <button onclick="updateDashboardValues()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold py-3 px-4 rounded-xl text-sm transition duration-150 active:scale-98">
-                    Recalculate Metrics
+            <div class="flex justify-between items-center">
+                <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">💳 Bills & Credit Cards</h3>
+                <button onclick="addBillRow()" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-2xs font-bold px-2.5 py-1 rounded-lg transition border border-emerald-500/20">
+                    + Add Item
                 </button>
             </div>
+            
+            <!-- Dynamic Injection Table Layout -->
+            <div id="billsContainer" class="space-y-3">
+                <!-- Rows injected instantly by Javascript -->
+            </div>
         </div>
+
     </main>
 
-    <!-- Bottom Navigation Bar (Visual Placeholder) -->
-    <footer class="bg-gray-950 border-t border-gray-900 px-6 py-4 flex justify-around text-gray-500 text-xs">
-        <span class="text-emerald-400 font-semibold">Dashboard</span>
-        <span>Allocations</span>
-        <span>Projections</span>
+    <!-- App Bottom Nav Footer -->
+    <footer class="bg-gray-950 border-t border-gray-900 px-6 py-4 text-center text-gray-600 text-2xs tracking-wider">
+        🔒 DATA SECURELY STORED LOCALLY ON YOUR IPHONE
     </footer>
 
-    <!-- Interactive Data Management Script -->
+    <!-- Logic Script for Computations and Storage -->
     <script>
-        // Load values securely from local storage or set initial baselines
-        let totalCash = parseFloat(localStorage.getItem('dashboardTotalCash')) || 11000;
+        // Core structural template defaults
+        let financialData = {
+            paycheck: 0,
+            frequency: 'biweekly',
+            bills: [
+                { name: 'SECU Credit Card', amount: 0, dueDate: 15 },
+                { name: 'Rent & Utilities', amount: 0, dueDate: 1 }
+            ]
+        };
 
-        function refreshUI() {
-            // Business logic for allocations
-            const emergencyFund = 5000;
-            const investableSurplus = Math.max(0, totalCash - emergencyFund);
-            const coreAllocation = investableSurplus * 0.60;
-            const incomeAllocation = investableSurplus * 0.40;
-
-            // Render calculations into HTML document elements
-            document.getElementById('totalCashDisplay').innerText = formatCurrency(totalCash);
-            document.getElementById('efundDisplay').innerText = formatCurrency(emergencyFund);
-            document.getElementById('surplusDisplay').innerText = formatCurrency(investableSurplus);
-            document.getElementById('coreAmountDisplay').innerText = formatCurrency(coreAllocation);
-            document.getElementById('incomeAmountDisplay').innerText = formatCurrency(incomeAllocation);
-            document.getElementById('cashInput').value = totalCash;
+        // Initialize and check device internal cache storage
+        function initApp() {
+            const cachedData = localStorage.getItem('masterFinanceData');
+            if (cachedData) {
+                financialData = JSON.parse(cachedData);
+            }
+            
+            document.getElementById('paycheckInput').value = financialData.paycheck || '';
+            document.getElementById('paycheckFreq').value = financialData.frequency || 'biweekly';
+            
+            renderBills();
+            calculateSummary();
         }
 
-        function updateDashboardValues() {
-            const inputVal = parseFloat(document.getElementById('cashInput').value);
-            if (!isNaN(inputVal) && inputVal >= 0) {
-                totalCash = inputVal;
-                localStorage.setItem('dashboardTotalCash', totalCash);
-                refreshUI();
+        // Render input row layouts dynamically
+        function renderBills() {
+            const container = document.getElementById('billsContainer');
+            container.innerHTML = '';
+
+            financialData.bills.forEach((bill, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-gray-950 border border-gray-900 rounded-xl p-3 space-y-2 relative";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <input type="text" value="${bill.name}" oninput="updateBillAsset(${index}, 'name', this.value)" placeholder="Item Label" class="bg-transparent font-medium text-sm text-white focus:outline-none w-2/3 border-b border-transparent focus:border-gray-800">
+                        <button onclick="removeBillRow(${index})" class="text-rose-500 hover:text-rose-400 text-2xs font-bold">Delete</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-3xs text-gray-500 uppercase">Balance/Due</label>
+                            <input type="number" value="${bill.amount || ''}" oninput="updateBillAsset(${index}, 'amount', this.value)" placeholder="$ Amount" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-3xs text-gray-500 uppercase">Due Day (1-31)</label>
+                            <input type="number" min="1" max="31" value="${bill.dueDate || ''}" oninput="updateBillAsset(${index}, 'dueDate', this.value)" placeholder="Day of Month" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addBillRow() {
+            financialData.bills.push({ name: 'New Expense', amount: 0, dueDate: 1 });
+            renderBills();
+            saveData();
+        }
+
+        function removeBillRow(index) {
+            financialData.bills.splice(index, 1);
+            renderBills();
+            saveData();
+        }
+
+        function updateBillAsset(index, key, val) {
+            if (key === 'amount' || key === 'dueDate') {
+                financialData.bills[index][key] = parseFloat(val) || 0;
+            } else {
+                financialData.bills[index][key] = val;
             }
+            saveData();
+        }
+
+        // Commit numbers securely to LocalStorage memory
+        function saveData() {
+            financialData.paycheck = parseFloat(document.getElementById('paycheckInput').value) || 0;
+            financialData.frequency = document.getElementById('paycheckFreq').value;
+            
+            localStorage.setItem('masterFinanceData', JSON.stringify(financialData));
+            calculateSummary();
+        }
+
+        // Execute structural logic summaries instantly
+        function calculateSummary() {
+            let totalBills = 0;
+            financialData.bills.forEach(bill => {
+                totalBills += bill.amount;
+            });
+
+            document.getElementById('summaryPaycheck').innerText = formatCurrency(financialData.paycheck);
+            document.getElementById('summaryBills').innerText = formatCurrency(totalBills);
         }
 
         function formatCurrency(num) {
-            return '$' + num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return '\$' + num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        // Initialize display properties immediately on window load
-        window.onload = refreshUI;
+        window.onload = initApp;
     </script>
 </body>
 </html>
