@@ -10,63 +10,331 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Command">
     
-    <script src="https://tailwindcss.com"></script>
     <style>
+        /* Pure, Self-Contained Native iOS Styling System */
+        :root {
+            --bg-main: #05070B;
+            --bg-card: #0D1321;
+            --bg-inner: #090D16;
+            --bg-input: #05070B;
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --emerald: #10B981;
+            --rose: #EF4444;
+            --blue: #3B82F6;
+            --border: #1F2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
         body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-h-screen: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             -webkit-tap-highlight-color: transparent;
         }
-        /* Smooth scale animation on button presses */
-        .active-press:active {
-            transform: scale(0.98);
+
+        header {
+            padding: 24px 24px 16px 24px;
+            border-bottom: 1px solid var(--border);
+            background-color: rgba(9, 13, 22, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            items-center: center;
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--emerald);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 9px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        main {
+            flex: 1;
+            padding: 24px 16px;
+            max-width: 448px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .hero-card {
+            background: linear-gradient(to bottom, #111827, #0F172A);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .label-xs {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .remainder-value {
+            font-size: 30px;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            font-family: Courier, monospace;
+        }
+
+        .chart-container {
+            background-color: rgba(5, 7, 11, 0.5);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(31, 41, 55, 0.4);
+            margin-bottom: 16px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            background-color: #05070B;
+            height: 12px;
+            border-radius: 9999px;
+            overflow: hidden;
+            display: flex;
+            border: 1px solid #05070B;
+        }
+
+        .bar-income { background-color: var(--emerald); height: 100%; transition: width 0.5s; }
+        .bar-bills { background-color: var(--rose); height: 100%; transition: width 0.5s; }
+
+        .chart-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--text-muted);
+            padding-top: 6px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-cols: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .summary-block {
+            border-top: 1px solid rgba(31, 41, 55, 0.6);
+            padding-top: 12px;
+        }
+
+        .summary-val { font-weight: 750; font-size: 14px; }
+        .val-inc { color: var(--emerald); }
+        .val-exp { color: var(--rose); }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid #111827;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--emerald);
+        }
+
+        .btn {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--emerald);
+            font-size: 9px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .btn-util {
+            background-color: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+        }
+
+        .row-item {
+            background-color: var(--bg-inner);
+            border: 1px solid rgba(31, 41, 55, 0.6);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .row-title-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid transparent;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 2px 0;
+            width: 60%;
+            border-radius: 0;
+        }
+        .row-title-input:focus { border-bottom-color: var(--border); }
+
+        .badge {
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background-color: #05070B;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .btn-del {
+            color: rgba(239, 68, 68, 0.7);
+            font-size: 9px;
+            font-weight: 700;
+            background: none;
+            border: none;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .input-label-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .input-label-container label {
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .input-small {
+            padding: 8px;
+            font-size: 12px;
+            font-family: Courier, monospace;
+        }
+
+        #threePaycheckBanner {
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        #threePaycheckBanner span { font-size: 12px; font-weight: 600; color: #60A5FA; display: block; }
+        #threePaycheckBanner p { font-size: 8px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+
+        .hidden { display: none !important; }
+
+        footer {
+            padding: 16px;
+            border-top: 1px solid rgba(31, 41, 55, 0.6);
+            text-align: center;
+            color: #4B5563;
+            font-size: 8px;
+            letter-spacing: 1.5px;
+            font-weight: 600;
         }
     </style>
 </head>
-<body class="bg-[#05070B] text-gray-100 font-sans min-h-screen flex flex-col justify-between selection:bg-emerald-500/30">
+<body>
 
-    <!-- Premium App Header -->
-    <header class="px-6 pt-6 pb-4 border-b border-gray-900 bg-[#090D16]/80 backdrop-blur sticky top-0 z-50 flex justify-between items-center">
+    <header>
         <div>
-            <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Finance Command</h1>
-            <p class="text-3xs text-gray-400 uppercase tracking-widest font-semibold mt-0.5" id="liveDate">September 2026 Tracker</p>
+            <h1>Finance Command</h1>
+            <div class="subtitle" id="liveDate">Tracking Dashboard</div>
         </div>
-        <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
     </header>
 
-    <!-- Main Content Stream -->
-    <main class="flex-1 px-4 py-6 space-y-5 overflow-y-auto max-w-md mx-auto w-full">
-        
-        <!-- Hero Dynamic Remainder Dashboard -->
-        <div class="bg-gradient-to-b from-[#111827] to-[#0F172A] border border-gray-800 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none"></div>
+    <main>
+        <!-- Hero Metrics Dashboard -->
+        <div class="hero-card">
+            <span class="label-xs">Net Disposable Remainder</span>
+            <div class="remainder-value" id="netRemainder">\$0.00</div>
             
-            <span class="block text-3xs font-bold text-gray-400 uppercase tracking-wider mb-1">Net Disposable Remainder</span>
-            <div class="text-3xl font-black tracking-tight text-white transition-all duration-300" id="netRemainder font-mono">\$0.00</div>
-            
-            <div class="mt-4 grid grid-cols-2 gap-4 border-t border-gray-800/60 pt-3 text-xs">
-                <div>
-                    <span class="block text-3xs text-gray-500 uppercase font-semibold">Total Net Income</span>
-                    <span class="font-bold text-emerald-400 text-sm" id="summaryPaycheck">\$0.00</span>
+            <div class="chart-container">
+                <div class="progress-bar-bg">
+                    <div id="chartIncomeBar" class="bar-income" style="width: 50%"></div>
+                    <div id="chartBillsBar" class="bar-bills" style="width: 50%"></div>
                 </div>
-                <div>
-                    <span class="block text-3xs text-gray-500 uppercase font-semibold">Total Expenses</span>
-                    <span class="font-bold text-rose-400 text-sm" id="summaryBills">\$0.00</span>
+                <div class="chart-legend">
+                    <span id="chartIncomeLabel">Income: 0%</span>
+                    <span id="chartBillsLabel">Expenses: 0%</span>
                 </div>
             </div>
-        </div>
 
-        <!-- Configuration Section: Income -->
-        <div class="bg-[#0D1321] border border-gray-900 rounded-2xl p-4 shadow-xl space-y-3">
-            <div class="flex items-center space-x-2">
-                <span class="text-sm">💵</span>
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Income Adjustments</h3>
+            <div id="threePaycheckBanner" class="hidden">
+                <span>🗓️ 3-Paycheck Surplus Milestone Active</span>
+                <p>Extra paycheck buffer detected this month!</p>
             </div>
-            <div class="grid grid-cols-2 gap-3">
+            
+            <div class="grid-2 summary-block">
                 <div>
-                    <label class="block text-3xs text-gray-500 mb-1 font-medium">Paycheck Amount</label>
-                    <input type="number" id="paycheckInput" oninput="saveData()" placeholder="0.00" class="w-full bg-[#05070B] border border-gray-800 focus:border-emerald-500 rounded-xl px-3 py-2.5 text-white focus:outline-none text-sm font-semibold transition-all">
-                </div>
                 <div>
                     <label class="block text-3xs text-gray-500 mb-1 font-medium">Pay Cycle</label>
                     <select id="paycheckFreq" onchange="saveData()" class="w-full bg-[#05070B] border border-gray-800 focus:border-emerald-500 rounded-xl px-3 py-2.5 text-white focus:outline-none text-sm font-semibold transition-all h-[42px]">
