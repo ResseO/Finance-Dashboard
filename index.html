@@ -277,10 +277,23 @@
             border-radius: 12px;
             padding: 12px;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 0px;
         }
         #threePaycheckBanner span { font-size: 12px; font-weight: 600; color: #60A5FA; display: block; }
         #threePaycheckBanner p { font-size: 8px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+
+        .apple-banner {
+            background-color: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .apple-banner span { font-size: 16px; }
+        .apple-banner p { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+        .apple-banner strong { color: var(--emerald); font-family: Courier, monospace; }
 
         .hidden { display: none !important; }
 
@@ -322,16 +335,3 @@
                 </div>
             </div>
 
-            <div id="threePaycheckBanner" class="hidden">
-                <span>🗓️ 3-Paycheck Surplus Milestone Active</span>
-                <p>Extra paycheck buffer detected this month!</p>
-            </div>
-            
-            <div class="grid-2 summary-block">
-                <div>
-                    <span class="label-xs">Total Income</span>
-                    <span class="summary-val val-inc" id="summaryPaycheck">$0.00</span>
-                </div>
-                <div>
-
-                    
