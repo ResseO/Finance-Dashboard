@@ -17,6 +17,7 @@
             padding-bottom: env(safe-area-inset-bottom);
             -webkit-tap-highlight-color: transparent;
         }
+        /* Smooth scale animation on button presses */
         .active-press:active {
             transform: scale(0.98);
         }
@@ -28,42 +29,20 @@
     <header class="px-6 pt-6 pb-4 border-b border-gray-900 bg-[#090D16]/80 backdrop-blur sticky top-0 z-50 flex justify-between items-center">
         <div>
             <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Finance Command</h1>
-            <p class="text-3xs text-gray-400 uppercase tracking-widest font-semibold mt-0.5" id="liveDate">Tracking Dashboard</p>
+            <p class="text-3xs text-gray-400 uppercase tracking-widest font-semibold mt-0.5" id="liveDate">September 2026 Tracker</p>
         </div>
         <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
     </header>
 
     <!-- Main Content Stream -->
-    <main class="flex-1 px-4 py-6 space-y-6 overflow-y-auto max-w-md mx-auto w-full">
+    <main class="flex-1 px-4 py-6 space-y-5 overflow-y-auto max-w-md mx-auto w-full">
         
         <!-- Hero Dynamic Remainder Dashboard -->
         <div class="bg-gradient-to-b from-[#111827] to-[#0F172A] border border-gray-800 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
-            <span class="block text-3xs font-bold text-gray-400 uppercase tracking-wider mb-1">Net Disposable Remainder</span>
-            <div class="text-3xl font-black tracking-tight text-white transition-all duration-300 mb-4" id="netRemainder">\$0.00</div>
+            <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none"></div>
             
-            <!-- Dynamic Proportional Bar Chart -->
-            <div class="space-y-2 bg-[#05070B]/50 p-3 rounded-xl border border-gray-800/40 mb-4">
-                <div class="w-full bg-gray-950 rounded-full h-3 overflow-hidden flex border border-gray-950">
-                    <div id="chartIncomeBar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 50%"></div>
-                    <div id="chartBillsBar" class="bg-rose-500 h-full transition-all duration-500" style="width: 50%"></div>
-                </div>
-                <div class="flex justify-between text-3xs pt-1">
-                    <div class="flex items-center space-x-1">
-                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 block"></span>
-                        <span class="text-gray-400" id="chartIncomeLabel">Income: 0%</span>
-                    </div>
-                    <div class="flex items-center space-x-1">
-                        <span class="h-1.5 w-1.5 rounded-full bg-rose-500 block"></span>
-                        <span class="text-gray-400" id="chartBillsLabel">Expenses: 0%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dynamic 3-Paycheck Month Tracker Banner -->
-            <div id="threePaycheckBanner" class="hidden bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 text-center mb-4 transition-all">
-                <span class="text-xs font-semibold text-blue-400 block">🗓️ 3-Paycheck Surplus Milestone Active</span>
-                <p class="text-4xs text-gray-400 uppercase tracking-wider mt-0.5">This month provides an extra paycheck buffer!</p>
-            </div>
+            <span class="block text-3xs font-bold text-gray-400 uppercase tracking-wider mb-1">Net Disposable Remainder</span>
+            <div class="text-3xl font-black tracking-tight text-white transition-all duration-300" id="netRemainder font-mono">\$0.00</div>
             
             <div class="mt-4 grid grid-cols-2 gap-4 border-t border-gray-800/60 pt-3 text-xs">
                 <div>
@@ -77,11 +56,11 @@
             </div>
         </div>
 
-        <!-- Section: Income Adjustments -->
+        <!-- Configuration Section: Income -->
         <div class="bg-[#0D1321] border border-gray-900 rounded-2xl p-4 shadow-xl space-y-3">
             <div class="flex items-center space-x-2">
                 <span class="text-sm">💵</span>
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Income & Cycle</h3>
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Income Adjustments</h3>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
@@ -89,106 +68,57 @@
                     <input type="number" id="paycheckInput" oninput="saveData()" placeholder="0.00" class="w-full bg-[#05070B] border border-gray-800 focus:border-emerald-500 rounded-xl px-3 py-2.5 text-white focus:outline-none text-sm font-semibold transition-all">
                 </div>
                 <div>
-                    <label class="block text-3xs text-gray-500 mb-1 font-medium">Pay Cycle Calendar</label>
+                    <label class="block text-3xs text-gray-500 mb-1 font-medium">Pay Cycle</label>
                     <select id="paycheckFreq" onchange="saveData()" class="w-full bg-[#05070B] border border-gray-800 focus:border-emerald-500 rounded-xl px-3 py-2.5 text-white focus:outline-none text-sm font-semibold transition-all h-[42px]">
-                        <option value="biweekly">Biweekly Schedule</option>
-                        <option value="monthly">Monthly Fixed</option>
+                        <option value="biweekly">Biweekly (Est. Monthly)</option>
+                        <option value="monthly">Monthly Flat</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <!-- Section: Custom Savings Target Tracker -->
-        <div class="bg-[#0D1321] border border-gray-900 rounded-2xl p-4 shadow-xl space-y-4">
-            <div class="flex items-center space-x-2">
-                <span class="text-sm">🎯</span>
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Custom Savings Target</h3>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-3xs text-gray-500 mb-1 font-medium">Current Balance</label>
-                    <input type="number" id="savingsCurrentInput" oninput="saveData()" placeholder="e.g. 5000" class="w-full bg-[#05070B] border border-gray-800 focus:border-emerald-500 rounded-xl px-3 py-2.5 text-white focus:outline-none text-sm font-semibold transition-all">
-                </div>
-                <div>
-                    <label class="block text-3xs text-gray-500 mb-1 font-medium">Goal Target</label>
-                    <input type="number" id="savingsGoalInput" oninput="saveData()" placeholder="e.g. 10000" class="w-full bg-[#05070B] border border-gray-800 focus:border-emerald-500 rounded-xl px-3 py-2.5 text-white focus:outline-none text-sm font-semibold transition-all">
-                </div>
-            </div>
-            <!-- Savings Progress Bar Layout -->
-            <div class="space-y-1.5 pt-1">
-                <div class="flex justify-between text-3xs text-gray-400 uppercase font-semibold">
-                    <span>Goal Progress</span>
-                    <span id="savingsPercentLabel">0%</span>
-                </div>
-                <div class="w-full bg-gray-950 rounded-full h-2 overflow-hidden border border-gray-900">
-                    <div id="savingsProgressBar" class="bg-gradient-to-r from-blue-500 to-teal-400 h-full transition-all duration-500" style="width: 0%"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Group A: Credit Cards -->
+        <!-- Configuration Section: Bills Ledger -->
         <div class="bg-[#0D1321] border border-gray-900 rounded-2xl p-4 shadow-xl space-y-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <span class="text-sm">💳</span>
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Credit Cards</h3>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Bills & Obligations</h3>
                 </div>
-                <button onclick="addBillRow('cards')" class="active-press bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-3xs font-bold px-3 py-1.5 rounded-xl transition border border-emerald-500/20 uppercase tracking-wider">
-                    + Add Card
+                <button onclick="addBillRow()" class="active-press bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-3xs font-bold px-3 py-1.5 rounded-xl transition border border-emerald-500/20 uppercase tracking-wider">
+                    + Add Obligation
                 </button>
-            </div>
-            <div id="cardsContainer" class="space-y-3"></div>
-        </div>
-
-        <!-- Group B: Variable Utilities -->
-        <div class="bg-[#0D1321] border border-gray-900 rounded-2xl p-4 shadow-xl space-y-4 ring-1 ring-amber-500/10">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <span class="text-sm">🔌</span>
-                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Fluctuating Utilities</h3>
-                </div>
-                <button onclick="addBillRow('utilities')" class="active-press bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-3xs font-bold px-3 py-1.5 rounded-xl transition border border-amber-500/20 uppercase tracking-wider">
-                    + Add Utility
-                </button>
-            </div>
-            <div id="utilitiesContainer" class="space-y-3"></div>
-        </div>
-
-        <!-- Group C: Streaming Services -->
-        <div class="bg-[#0D1321] border border-gray-900 rounded-2xl p-4 shadow-xl space-y-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <span class="text-sm">🍿</span>
             </div>
             
-            <!-- Dynamic Injection Table Layout -->
+            <!-- Injected Cards -->
             <div id="billsContainer" class="space-y-3">
-                <!-- Rows injected instantly by Javascript -->
+                <!-- Dynamically populated via JS -->
             </div>
         </div>
 
     </main>
 
-    <!-- App Bottom Nav Footer -->
-    <footer class="bg-gray-950 border-t border-gray-900 px-6 py-4 text-center text-gray-600 text-2xs tracking-wider">
-        🔒 DATA SECURELY STORED LOCALLY ON YOUR IPHONE
+    <!-- Native App Footnote -->
+    <footer class="bg-[#05070B] border-t border-gray-900/60 px-6 py-4 text-center text-gray-600 text-3xs tracking-widest font-semibold uppercase">
+        🔐 LOCAL DATA ONLY • ZERO SERVERS
     </footer>
 
-    <!-- Logic Script for Computations and Storage -->
     <script>
-        // Core structural template defaults
+        // Core state architecture
         let financialData = {
-            paycheck: 0,
+            paycheck: 11000,
             frequency: 'biweekly',
             bills: [
-                { name: 'SECU Credit Card', amount: 0, dueDate: 15 },
-                { name: 'Rent & Utilities', amount: 0, dueDate: 1 }
+                { name: 'SECU Visa Card', amount: 1500, dueDate: 15 },
+                { name: 'Housing & Expenses', amount: 1845, dueDate: 1 }
             ]
         };
 
-        // Initialize and check device internal cache storage
+        // Initialize App UI and parse Date
         function initApp() {
-            const cachedData = localStorage.getItem('masterFinanceData');
+            const dateObj = new Date();
+            document.getElementById('liveDate').innerText = dateObj.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) + " Track";
+
+            const cachedData = localStorage.getItem('masterFinanceDataPremium');
             if (cachedData) {
                 financialData = JSON.parse(cachedData);
             }
@@ -200,80 +130,51 @@
             calculateSummary();
         }
 
-        // Render input row layouts dynamically
+        // Generate clean modular elements with real-time countdown calculations
         function renderBills() {
             const container = document.getElementById('billsContainer');
             container.innerHTML = '';
 
+            const today = new Date();
+            const currentDay = today.getDate();
+
             financialData.bills.forEach((bill, index) => {
+                // Compute countdown arithmetic
+                let daysRemaining = bill.dueDate - currentDay;
+                let countdownText = "";
+                let badgeClass = "bg-gray-900 text-gray-400";
+
+                if (daysRemaining === 0) {
+                    countdownText = "⚠️ Due Today";
+                    badgeClass = "bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold";
+                } else if (daysRemaining === 1) {
+                    countdownText = "⏳ Due Tomorrow";
+                    badgeClass = "bg-orange-500/10 text-orange-400 border border-orange-500/20";
+                } else if (daysRemaining > 1) {
+                    countdownText = `⏳ In ${daysRemaining} days`;
+                    badgeClass = daysRemaining <= 5 ? "bg-amber-500/5 text-amber-300" : "bg-gray-900/80 text-gray-400";
+                } else {
+                    // Passed this month, calculate for next month cycle
+                    const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, bill.dueDate);
+                    const timeDiff = nextMonth.getTime() - today.getTime();
+                    const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                    countdownText = `⏳ In ${diffDays} days`;
+                    badgeClass = "bg-gray-900/40 text-gray-500";
+                }
+
                 const card = document.createElement('div');
-                card.className = "bg-gray-950 border border-gray-900 rounded-xl p-3 space-y-2 relative";
+                card.className = "bg-[#090D16] border border-gray-900/60 rounded-xl p-3.5 space-y-3 shadow-inner";
                 card.innerHTML = `
                     <div class="flex justify-between items-center">
-                        <input type="text" value="${bill.name}" oninput="updateBillAsset(${index}, 'name', this.value)" placeholder="Item Label" class="bg-transparent font-medium text-sm text-white focus:outline-none w-2/3 border-b border-transparent focus:border-gray-800">
-                        <button onclick="removeBillRow(${index})" class="text-rose-500 hover:text-rose-400 text-2xs font-bold">Delete</button>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-3xs text-gray-500 uppercase">Balance/Due</label>
-                            <input type="number" value="${bill.amount || ''}" oninput="updateBillAsset(${index}, 'amount', this.value)" placeholder="$ Amount" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-3xs text-gray-500 uppercase">Due Day (1-31)</label>
-                            <input type="number" min="1" max="31" value="${bill.dueDate || ''}" oninput="updateBillAsset(${index}, 'dueDate', this.value)" placeholder="Day of Month" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        <input type="text" value="${bill.name}" oninput="updateBillAsset(${index}, 'name', this.value)" placeholder="Label" class="bg-transparent font-bold text-sm text-white focus:outline-none w-2/3 border-b border-transparent focus:border-gray-800">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-3xs px-2 py-0.5 rounded-md ${badgeClass}">${countdownText}</span>
+                            <button onclick="removeBillRow(${index})" class="text-rose-500/70 hover:text-rose-400 text-3xs font-bold uppercase tracking-wider pl-1">Del</button>
                         </div>
                     </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function addBillRow() {
-            financialData.bills.push({ name: 'New Expense', amount: 0, dueDate: 1 });
-            renderBills();
-            saveData();
-        }
-
-        function removeBillRow(index) {
-            financialData.bills.splice(index, 1);
-            renderBills();
-            saveData();
-        }
-
-        function updateBillAsset(index, key, val) {
-            if (key === 'amount' || key === 'dueDate') {
-                financialData.bills[index][key] = parseFloat(val) || 0;
-            } else {
-                financialData.bills[index][key] = val;
-            }
-            saveData();
-        }
-
-        // Commit numbers securely to LocalStorage memory
-        function saveData() {
-            financialData.paycheck = parseFloat(document.getElementById('paycheckInput').value) || 0;
-            financialData.frequency = document.getElementById('paycheckFreq').value;
-            
-            localStorage.setItem('masterFinanceData', JSON.stringify(financialData));
-            calculateSummary();
-        }
-
-        // Execute structural logic summaries instantly
-        function calculateSummary() {
-            let totalBills = 0;
-            financialData.bills.forEach(bill => {
-                totalBills += bill.amount;
-            });
-
-            document.getElementById('summaryPaycheck').innerText = formatCurrency(financialData.paycheck);
-            document.getElementById('summaryBills').innerText = formatCurrency(totalBills);
-        }
-
-        function formatCurrency(num) {
-            return '\$' + num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-
-        window.onload = initApp;
-    </script>
-</body>
-</html>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-4xs text-gray-500 uppercase font-bold tracking-wider mb-1">Balance Due</label>
+                            <input type="number" value="${bill.amount || ''}" oninput="updateBillAsset(${index}, 'amount', this.value)" placeholder="\$ 0.00" class="w-full bg-[#05070B] border border-gray-850 rounded-lg px-2.5 py-2 text-xs text-white font-semibold focus:outline-none focus:border-emerald-500 font-mono">
+                        </div>
+                        <div>
